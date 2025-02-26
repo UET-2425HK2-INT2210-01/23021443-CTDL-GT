@@ -4,6 +4,7 @@ using namespace std;
 
 //baitap1
 #ifdef ENABLED
+#include <vector>
 int main() {
     int n;
     int count = 0;
