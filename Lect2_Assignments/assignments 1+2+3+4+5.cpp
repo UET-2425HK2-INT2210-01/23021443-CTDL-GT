@@ -4,23 +4,58 @@ using namespace std;
 
 //baitap1
 #ifdef ENABLED
-#include <vector>
-int main() {
-    int n;
-    int count = 0;
-    cin >> n;
-    vector<int> store(n);
-    for (int i = 0; i < n; i++) {
-        cin >> store[i];
-    }
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = i + 1; j < n; j++) {
-            if (store[i] == store[j]) {
-                count++;
+struct node {
+    int data;
+    node* next;
+};
+
+class linkedList {
+    node* head;
+public:
+    linkedList() : head(NULL){}
+    void insert(int x) {
+        node* newNode = new node();
+        newNode->next = NULL;
+        newNode->data = x;
+        if (head == NULL) {
+            newNode->next = head;
+            head = newNode;
+        }
+        else {
+            node* temp = head;
+            while (temp->next != NULL){
+                temp = temp->next;
             }
+            temp->next = newNode;
         }
     }
-    cout << count << endl;
+    void pairs(){
+        int dem = 0;
+        node* outer = head;
+        while (outer != NULL) {
+            node* inner = outer->next;
+            while (inner != NULL) {
+                if (outer->data == inner->data) {
+                    dem++;
+                }
+                inner = inner->next;
+            }
+            outer = outer->next;
+        }
+        cout << dem << endl;
+    }
+};
+
+int main() {
+    int n;
+    cin >> n;
+    linkedList list;
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        list.insert(x);
+    }
+    list.pairs();
     return 0;
 }
 #endif
