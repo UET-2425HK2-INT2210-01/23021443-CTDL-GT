@@ -1,3 +1,6 @@
+#include <iostream>
+#include <string>
+using namespace std;
 ///baitap1
 #ifdef DISABLED
 2 ^ 10: O(1);
