@@ -2,6 +2,7 @@
 
 using namespace std;
 
+///bai1
 
 #ifdef DISABLED
 struct node { //tao struct node gom data , con tro left va right
@@ -267,7 +268,9 @@ END MAIN
 
 #endif
 
+///bai2
 
+	
 #ifdef DISABLED
 struct Node { // khoi tao struct node gom data , con tro left, right va parent
 	int data;
