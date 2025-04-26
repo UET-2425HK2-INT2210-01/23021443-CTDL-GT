@@ -5,7 +5,59 @@ using namespace std;
 
 //bai1
 #ifdef DISABLED
+//quicksort
+int partition(vector<int>& arr, int low, int high) {
+    // Chon phan tu cuoi lam pivot
+    int pivot = arr[high];
 
+    // Dat chi so cua phan tu nho hon pivot
+    int i = low - 1;
+
+    // Duyet tu vi tri low den high - 1
+    for (int j = low; j <= high - 1; j++) {
+        // Neu phan tu hien tai nho hon pivot
+        if (arr[j] < pivot) {
+            i++; // Tang chi so cua phan tu nho hon pivot
+            swap(arr[i], arr[j]); // Hoan doi phan tu
+        }
+    }
+
+    // Dua pivot ve vi tri dung trong mang
+    swap(arr[i + 1], arr[high]);
+    return i + 1; // Tra ve chi so cua pivot sau khi sap xep
+}
+
+void quickSort(vector<int>& arr, int low, int high) {
+    // Neu chi so con trai nho hon chi so con phai thi tiep tuc de quy
+    if (low < high) {
+        int pi = partition(arr, low, high); // Chia mang thanh 2 phan
+        quickSort(arr, low, pi - 1); // Sap xep mang ben trai
+        quickSort(arr, pi + 1, high); // Sap xep mang ben phai
+    }
+}
+
+int main() {
+    int n;
+    cin >> n; // Nhap so luong phan tu cua mang
+
+    vector<int> arr(n); // Tao mang co n phan tu
+
+    // Nhap cac phan tu cua mang
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    quickSort(arr, 0, n - 1); // Goi ham quickSort de sap xep mang
+
+    // In ra mang da sap xep
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+}
+
+
+
+///mergesort
 // Ham merge de tron hai mang con da duoc sap xep thanh mot mang da sap xep
 void merge(vector<int>& arr, int left, int right, int middle) {
 	// Tinh so phan tu cua hai mang con
