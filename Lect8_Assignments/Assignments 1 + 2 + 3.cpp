@@ -6,6 +6,12 @@ using namespace std;
 //bai1
 #ifdef DISABLED
 //quicksort
+void swap(int& a, int& b) {
+	int temp = a;
+	a = b;
+	b = temp;
+}
+
 int partition(vector<int>& arr, int low, int high) {
     // Chon phan tu cuoi lam pivot
     int pivot = arr[high];
