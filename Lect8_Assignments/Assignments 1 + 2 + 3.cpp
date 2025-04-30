@@ -160,137 +160,45 @@ int main() {
 
 //bai2
 #ifdef DISABLED
-// Ham de quy genSum dung de tao tat ca tong con co the tu mang arr
-void genSum(int index, int currentSum, vector<int>& arr, vector<int>& result) {
-	// Neu da duyet het mang, them tong hien tai vao result
-	if (index == arr.size()) {
-		result.push_back(currentSum);
-		return;
-	}
+// Ham dynamic programming de tao tat ca tong co the tao tu tap con cua arr
+void computeSubsetSumsDP(const vector<int>& arr, int target, vector<bool>& dp) {
+	dp[0] = true; // tong 0 luon co the tao duoc
 
-	// Khong chon phan tu tai index hien tai
-	genSum(index + 1, currentSum, arr, result);
-
-	// Chon phan tu tai index hien tai va cong vao tong
-	genSum(index + 1, currentSum + arr[index], arr, result);
-}
-
-// Ham mergeosrt voi cong dung y het nhu bai 1 o tren
-void merge(vector<int>& arr, int left, int right, int middle) {
-	int n1 = middle - left + 1;
-	int n2 = right - middle;
-
-
-	vector<int> L(n1), R(n2);
-
-
-	for (int i = 0; i < n1; i++) {
-		L[i] = arr[left + i];
-	}
-
-
-	for (int i = 0; i < n2; i++) {
-		R[i] = arr[middle + i + 1];
-	}
-
-	int i = 0, j = 0;
-	int k = left;
-
-
-	while (i < n1 && j < n2) {
-		if (L[i] <= R[j]) {
-			arr[k] = L[i];
-			i++;
+	for (int num : arr) {
+		for (int i = target; i >= num; --i) {
+			if (dp[i - num]) {
+				dp[i] = true;
+			}
 		}
-		else {
-			arr[k] = R[j];
-			j++;
-		}
-		k++;
-	}
-
-
-	while (i < n1) {
-		arr[k] = L[i];
-		k++;
-		i++;
-	}
-
-	while (j < n2) {
-		arr[k] = R[j];
-		k++;
-		j++;
 	}
 }
 
-// Ham sap xep merge sort
-void mergeSort(vector<int>& arr, int left, int right) {
-	if (left >= right) {
-		return;
-	}
+// Ham kiem tra co tong con tu arr + arr2 bang target hay khong
+void checkTargetSum(int target, const vector<int>& arr, const vector<int>& arr2) {
+	vector<bool> dp1(target + 1, false);
+	vector<bool> dp2(target + 1, false);
 
-	int middle = left + (right - left) / 2;
-	mergeSort(arr, left, middle);
-	mergeSort(arr, middle + 1, right);
+	computeSubsetSumsDP(arr, target, dp1);
+	computeSubsetSumsDP(arr2, target, dp2);
 
-
-	merge(arr, left, right, middle);
-}
-
-// Ham kiem tra xem co cap tong hai day bang target hay khong
-void checkTargetSum(int target, vector<int>& arr, vector<int>& arr2) {
-	int n = 0; // bien nay khong su dung
-	int m = arr2.size(); // chi luu kich thuoc arr2 (khong can thiet lam)
-
-	// Sinh cac tong con tu arr va arr2
-	vector<int> resultSum;
-	vector<int> resultSum2;
-	genSum(0, 0, arr, resultSum);
-	genSum(0, 0, arr2, resultSum2);
-
-	// Sap xep hai danh sach tong
-	if (!resultSum.empty()) {
-		mergeSort(resultSum, 0, resultSum.size() - 1);
-	}
-	if (!resultSum2.empty()) {
-		mergeSort(resultSum2, 0, resultSum2.size() - 1);
-	}
-
-	// Su dung hai con tro de tim cap tong bang target
-	int left = 0;
-	int right = resultSum2.size() - 1;
-
-	while (left < resultSum.size() && right >= 0) {
-		int currentSum = resultSum[left] + resultSum2[right];
-		if (currentSum == target) {
-			// Neu tim thay cap tong bang target thi in YES va ket thuc
+	for (int i = 0; i <= target; ++i) {
+		if (dp1[i] && dp2[target - i]) {
 			cout << "YES" << endl;
 			return;
 		}
-		else if (currentSum < target) {
-			// Neu tong nho hon target thi tang con tro ben trai
-			left++;
-		}
-		else {
-			// Neu tong lon hon target thi giam con tro ben phai
-			right--;
-		}
 	}
 
-	// Neu khong tim duoc cap nao phu hop thi in NO
-	cout << "NO " << endl;
+	cout << "NO" << endl;
 }
 
 int main() {
 	int n, targetSum;
-
-	// Nhap so luong phan tu va tong muc tieu
 	cin >> n >> targetSum;
 
 	vector<int> arr;
 	vector<int> arr2;
 
-	// Tach mang thanh hai phan arr va arr2
+	// Tach mang thanh 2 nua
 	for (int i = 0; i < n / 2; ++i) {
 		int num;
 		cin >> num;
@@ -306,186 +214,54 @@ int main() {
 	// Goi ham kiem tra tong
 	checkTargetSum(targetSum, arr, arr2);
 }
-
 #endif
 
 
 //bai3
 
 #ifdef DISABLED
-const int MAX_SIZE = 1000;
-// Cau truc Item dai dien cho moi vat voi trong luong va gia tri
+// Cau truc Item luu trong luong va gia tri cua moi vat
 struct Item {
 	int weight;
 	int value;
 };
 
-//ham mergesort tuong tu chuc nang y het nhu bai1
-void merge(std::vector<Item>& arr, int left, int right, int middle) {
-	int n1 = middle - left + 1;
-	int n2 = right - middle;
-	std::vector<Item> L(n1), R(n2);
-
-	for (int i = 0; i < n1; ++i) {
-		L[i] = arr[left + i];
-	}
-	for (int i = 0; i < n2; ++i) {
-		R[i] = arr[middle + i + 1];
-	}
-
-	int i = 0, j = 0;
-	int k = left;
-
-	while (i < n1 && j < n2) {
-		if (L[i].weight <= R[j].weight) {
-			arr[k] = L[i];
-			i++;
-		}
-		else {
-			arr[k] = R[j];
-			j++;
-		}
-		k++;
-	}
-
-	while (i < n1) {
-		arr[k] = L[i];
-		k++;
-		i++;
-	}
-
-	while (j < n2) {
-		arr[k] = R[j];
-		k++;
-		j++;
-	}
-}
-
-void mergeSort(std::vector<Item>& arr, int left, int right) {
-	if (left >= right) {
-		return;
-	}
-	int middle = left + (right - left) / 2;
-	mergeSort(arr, left, middle);
-	mergeSort(arr, middle + 1, right);
-	merge(arr, left, right, middle);
-}
-
-void generateSubsets(int index, int currentWeight, int currentValue, const std::vector<Item>& items, std::vector<Item>& subsets) {
-	if (index == items.size()) {
-		subsets.push_back({ currentWeight, currentValue });
-		return;
-	}
-	generateSubsets(index + 1, currentWeight, currentValue, items, subsets);
-	generateSubsets(index + 1, currentWeight + items[index].weight, currentValue + items[index].value, items, subsets);
-}
-
-
-// Ham loai bo cac tap con khong toi uu (co trong luong lon hon nhung gia tri lai nho hon hoac bang)
-// Chi giu lai cac tap con co gia tri lon nhat voi tung trong luong
-vector<Item> pruneSubsets(vector<Item>& subsets) {
-	if (subsets.empty()) return {};
-
-	// Sap xep cac tap con theo trong luong tang dan
-	mergeSort(subsets, 0, subsets.size() - 1);
-
-	vector<Item> pruned_subsets;
-	pruned_subsets.push_back(subsets[0]);
-
-	for (size_t i = 1; i < subsets.size(); ++i) {
-		// Chi them vao neu gia tri lon hon tap con truoc do (toi uu hon)
-		if (subsets[i].value > pruned_subsets.back().value) {
-			pruned_subsets.push_back(subsets[i]);
-		}
-	}
-
-	return pruned_subsets;
-}
-
-
-// Ham tim cap tap con tu hai nua A va B co tong trong luong <= X va tong gia tri lon nhat
-int find_best_pair(vector<Item>& L_A, int sizeA, vector<Item>& L_B, int sizeB, int X) {
-	int max_total_value = 0;
-
-	// Tinh mang prefix_max_B de luu gia tri lon nhat toi vi tri i trong B
-	vector<int> prefix_max_B(sizeB);
-	if (sizeB > 0) {
-		prefix_max_B[0] = L_B[0].value;
-		for (int i = 1; i < sizeB; ++i) {
-			prefix_max_B[i] = max(prefix_max_B[i - 1], L_B[i].value);
-		}
-	}
-
-	// Duyet qua moi tap con trong L_A
-	for (int i = 0; i < sizeA; ++i) {
-		int wA = L_A[i].weight;
-		int vA = L_A[i].value;
-
-		// Trong luong con lai co the su dung tu L_B
-		int remaining_weight = X - wA;
-		if (remaining_weight < 0) continue;
-
-		// Tim tap con trong L_B co trong luong <= remaining_weight
-		int low = 0;
-		int high = sizeB - 1;
-		int best_index_B = -1;
-
-		while (low <= high) {
-			int mid = (low + high) / 2;
-			if (L_B[mid].weight <= remaining_weight) {
-				best_index_B = mid;
-				low = mid + 1;
-			}
-			else {
-				high = mid - 1;
-			}
-		}
-
-		// Neu tim thay, tinh tong gia tri
-		if (best_index_B != -1) {
-			int vB = prefix_max_B[best_index_B];
-			max_total_value = max(max_total_value, vA + vB);
-		}
-		// Neu khong ghep duoc voi B thi chi lay A
-		else if (wA <= X) {
-			max_total_value = max(max_total_value, vA);
-		}
-	}
-
-	return max_total_value;
-}
-
 int main() {
-	int n, X;
-	cin >> n >> X;
+	int n, maxWeight;
+	cin >> n >> maxWeight;
 
-	// Nhap n item gom trong luong va gia tri
+	// Nhap n vat, moi vat co trong luong va gia tri
 	vector<Item> items(n);
 	for (int i = 0; i < n; ++i) {
 		cin >> items[i].weight >> items[i].value;
 	}
 
-	// Tach danh sach item thanh hai nua
-	int n1 = n / 2;
-	vector<Item> first_half(items.begin(), items.begin() + n1);
-	vector<Item> second_half(items.begin() + n1, items.end());
+	// Khoi tao mang dp voi maxWeight + 1 phan tu, tat ca bang 0
+	// dp[w] luu tong gia tri lon nhat co the dat duoc voi trong luong la w
+	vector<int> dp(maxWeight + 1, 0);
 
-	// Sinh tat ca tap con cua moi nua
-	vector<Item> subsets_A;
-	generateSubsets(0, 0, 0, first_half, subsets_A);
+	// Duyet qua tung vat trong danh sach
+	for (int i = 0; i < n; ++i) {
+		// Duyet nguoc tu maxWeight ve weight cua vat
+		// Dam bao moi vat chi duoc dung 1 lan
+		for (int w = maxWeight; w >= items[i].weight; --w) {
+			// Cap nhat dp[w] neu chon vat hien tai cho gia tri cao hon
+			if (dp[w] < dp[w - items[i].weight] + items[i].value) {
+				dp[w] = dp[w - items[i].weight] + items[i].value;
+			}
+		}
+	}
 
-	vector<Item> subsets_B;
-	generateSubsets(0, 0, 0, second_half, subsets_B);
+	// Tim gia tri lon nhat trong mang dp
+	int maxValue = 0;
+	for (int i = 0; i <= maxWeight; ++i) {
+		if (dp[i] > maxValue) {
+			maxValue = dp[i];
+		}
+	}
 
-	// Loai bo cac tap con khong toi uu
-	vector<Item> pruned_A = pruneSubsets(subsets_A);
-	vector<Item> pruned_B = pruneSubsets(subsets_B);
-
-	// Tim tong gia tri lon nhat co the dat duoc voi tong trong luong <= X
-	int max_value = find_best_pair(pruned_A, pruned_A.size(), pruned_B, pruned_B.size(), X);
-
-	cout << max_value << endl;
-
+	// In ra ket qua la tong gia tri lon nhat
+	cout << maxValue << endl;
 	return 0;
 }
 #endif 
