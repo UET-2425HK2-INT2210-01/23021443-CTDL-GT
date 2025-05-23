@@ -3,11 +3,11 @@
 #include <stack>
 #include <fstream>
 
-using namespace std;
 
 
 //bai1
 #ifdef DISABLED 
+using namespace std;
 
 // Ham DFS de duyet do thi theo chieu sau
 void dfs(int v, const vector<vector<int>>& adj, vector<bool>& visited, stack<int>& topoStack) {
